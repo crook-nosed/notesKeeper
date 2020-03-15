@@ -2,8 +2,11 @@ from django.shortcuts import render
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import TaskSerializer
-from .models import Task
+from .serializers import TaskSerializer,TaskListSerializer
+from .models import Task,TaskList
+from .models import *
+from .serializers import *
+from rest_framework import generics
 
 # Create your views here.
 @api_view(['GET'])
@@ -21,8 +24,14 @@ def apiOverview(request):
     return Response(api_urls)
 
 @api_view(['GET'])
-def TaskList(request):
-    tasks = Task.objects.all()
+def TaskListFunctionView(request):
+    taskLists = TaskList.objects.all()
+    serializer = TaskListSerializer(taskLists, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def TaskListList(request):
+    tasks = TaskList.objects.all()
     serializer = TaskSerializer(tasks, many=True)
     return Response(serializer.data)
 
@@ -53,3 +62,29 @@ def TaskDelete(request, pk):
     tasks = Task.objects.get(id = pk)
     tasks.delete()
     return Response('Succesfully Deleted!')
+
+# from django.shortcuts import render
+# from .models import *
+# from .serializers import *
+# from rest_framework import generics
+# # Create your views here.
+
+
+class TaskListListView(generics.ListCreateAPIView):
+    queryset = TaskList.objects.all()
+    serializer_class = TaskListSerializer
+
+
+class TaskListSingleView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = TaskListSerializer
+    queryset = TaskList.objects.all()
+
+
+class TaskListView(generics.ListCreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+
+class TaskSingleView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
