@@ -13,5 +13,7 @@ urlpatterns = [
     path('task-list-update/<str:pk>',TaskListUpdate,name='task-list-update'),
     path('task-delete/<str:pk>',TaskDelete,name='task-delete'),
     path('task-list-delete/<str:pk>',TaskListDelete,name='task-list-delete'),
+    # path('users/', UserList.as_view()),
+    # path('users/<int:pk>/', UserDetail.as_view()),
     
 ]
